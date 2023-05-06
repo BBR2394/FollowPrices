@@ -6,7 +6,8 @@ import sqlalchemy
 #from sqlalchemy.orm import mapped_column
 from pydantic import BaseModel
 from sqlalchemy import create_engine
-
+from sqlalchemy import select
+import base_sqlalchemy
 
 
 app = FastAPI()
@@ -41,6 +42,11 @@ async def root():
 @app.get("/")
 async def root():
     return {"message": "Hello World ! bonjour encore !"}
+
+@app.get("/sqlalchemy/{item_id}")
+def read_item(item_id: int, ): #q: Union[str, None] = None
+    stmt = select(base_sqlalchemy.User).where(base_sqlalchemy.User.id == item_id)
+    return stmt
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, ): #q: Union[str, None] = None
