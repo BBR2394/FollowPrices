@@ -9,6 +9,13 @@ from sqlalchemy import create_engine
 from sqlalchemy import select
 import base_sqlalchemy
 
+import psycopg2
+
+conn = psycopg2.connect(
+host="localhost",
+database="follow_prices",
+user="postgres",
+password="")
 
 app = FastAPI()
 
@@ -34,6 +41,14 @@ class Item(BaseModel):
 
 
 engine = create_engine("postgresql://postgres:password@localhost:5432/follow_prices", echo=True)
+
+@app.get("/products/all")
+def getAll():
+    cmd = "select * from product ;"
+    cur = conn.cursor()
+    cur.execute(cmd)
+    result = cur.fetchall()
+    return result
 
 @app.get("/shell")
 async def root():
